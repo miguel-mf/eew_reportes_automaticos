@@ -23,6 +23,7 @@ import time
 import math
 from tinydb import TinyDB, Query
 import pandas as pd
+from geopy import distance
 
 tiempo_espera = 60*60 # 1 hora = 3600 s
 report_db = TinyDB('report_db.json')
@@ -39,6 +40,15 @@ except:
         f.write(tiempo_ultima_actualizacion)
         f.close()
 
+datProf, datDist, datTiempo = np.loadtxt('ProfDistTime.dat', delimiter=' ', usecols=(0,1,2), unpack=True)
+		
+def tiempoViaje(ev_lat,ev_lon,loc_lat,loc_lon,dep)
+	distancia = distance.distance((ev_lat,ev_lon), (loc_lat,loc_lon)).km
+	if distancia > 1000.0:
+		return 300.0
+	aux = datDist[datProf==dep]
+	tiempo = datTiempo[aux==round(distancia*2.0, 1)/2.0]
+	return tiempo	
 def connect():
     """ Funcion que se encarga de conectarse a las bases de datos 
     y actualizar la base de datos para repores automaticos. """
@@ -101,31 +111,43 @@ def connect():
 				aux = 111.0*math.sqrt((lon[i] - csn_lon[j])**2.0+(lat[i] - csn_lat[j])**2.0)
 				if aux < distancia:
 					evento = j
+					distancia = aux
 			if not evento: 
 				false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'time':modtime[i]})
 				continue
-			try: 
-				false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'time':modtime[i]})
-				if not sismo.search(event_check.csn_date == CSN_date && event_check.eew_date != 0):
-					db.update({'eew_date': ev_time[}, event_check.csn_date == CSN_date)
+			false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'time':modtime[i]})
+			alert_time_centinela = tiempoViaje(lat[i],lon[i],-23.01, -69.10,csn_dep[evento])
+			alert_time_santiago = tiempoViaje(lat[i],lon[i],-33.45, -70.67,csn_dep[evento])
+			eew_comp_time = modtime[i] - csn_date[evento]
+			if not sismo.search(event_check.csn_date == csn_date[evento] & event_check.eew_date != 0):
+				db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],
+					  'alert_time_centinela': alert_time_centinela,'alert_time_santiago': alert_time_santiago,
+					   'eew_comp_time': eew_comp_time,'alertado': True}, event_check.csn_date == csn_date[evento])
+			else:
+				aux = sismo.get(event_check.csn_date == csn_date[evento])
+				loc_evento_nuevo = (lat[i], lon[i])
+				loc_evento_anterior = (aux.eew_lat,aux.eew_lon)
+				loc_csn = (aux.csn_lat,aux.csn_lon)
+				dist_nuevo = distance.distance(loc_evento_nuevo, loc_csn).km
+				dist_anterior = distance.distance(loc_evento_anterior, loc_csn).km
+				nota_nueva = abs(mag[i]-aux.csn_mag)/2.0 + abs(ev_time[i]-aux.csn_date)/20.0 + dist_nuevo/100
+				nota_anterior = abs(aux.eew_mag-aux.csn_mag)/2.0 + abs(aux.eew_date-aux.csn_date)/10.0 + dist_anterior/70.0
+				if nota_nueva < nota_anterior and modtime[i] < aux.csn_date + aux.eew_comp_time:
+					db.update({'rep_date': aux.eew_date,'rep_lon': aux.eew_lon,'rep_lat': aux.eew_lat,
+							   'rep_mag': aux.eew_mag, 'doble_alerta': True}, event_check.csn_date == csn_date[evento])
+					db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],
+					  'alert_time_centinela': alert_time_centinela,'alert_time_santiago': alert_time_santiago,
+					   'eew_comp_time': eew_comp_time,'alertado': True}, event_check.csn_date == csn_date[evento])
 				else:
-					
-
-
-			# Actualizar base de datos tinyDB
-			for sismos in listado_sismos:
-				if not db.search(event_check.date_csn == sismo.date_csn):
-					report_db.insert({'date_csn':sismo.date_csn, 'magnitud':3.0,'ubicacion':'Ninguna', 'distancia':999999, 'date':message.date, 
-						'username':message.from_user.id, 'username':message.from_user.first_name})
-				else:
-					report_db.update
+					db.update({'rep_date': ev_time[i],'rep_lon': lon[i],'rep_lat': lat[i],
+							   'rep_mag': mag[i], 'doble_alerta': True}, event_check.csn_date == csn_date[evento])
 			# Cambiar tiempo de ultima actualizacion y esperar para no sobrecargar la base psql
 			with open(time_file, 'w') as f:
 				f.write(tiempo_ultima_actualizacion)
 				f.close()
 			time.sleep(tiempo_espera) 
         
-
+		
 
 if __name__ == '__main__':
     connect()
