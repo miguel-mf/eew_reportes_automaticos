@@ -43,12 +43,13 @@ except:
 datProf, datDist, datTiempo = np.loadtxt('ProfDistTime.dat', delimiter=' ', usecols=(0,1,2), unpack=True)
 		
 def tiempoViaje(ev_lat,ev_lon,loc_lat,loc_lon,dep)
-	distancia = distance.distance((ev_lat,ev_lon), (loc_lat,loc_lon)).km
-	if distancia > 1000.0:
-		return 300.0
-	aux = datDist[datProf==dep]
-	tiempo = datTiempo[aux==round(distancia*2.0, 1)/2.0]
-	return tiempo	
+	#distancia = distance.distance((ev_lat,ev_lon), (loc_lat,loc_lon)).km
+	#if distancia > 1000.0:
+	#	return 300.0
+	#aux = datDist[datProf==dep]
+	#tiempo = datTiempo[aux==round(distancia*2.0, 1)/2.0]
+	#return tiempo
+	
 def connect():
     """ Funcion que se encarga de conectarse a las bases de datos 
     y actualizar la base de datos para repores automaticos. """
