@@ -1,4 +1,4 @@
-# eews_reports
+# eews-reports
 
 Codigos para hacer reportes automáticos de alerta temprana.
 
