@@ -55,8 +55,11 @@ class PDF(FPDF):
         self.cell(0, 5, '(end of excerpt)')
 
     def print_chapter(self, num, title, name):
-        #self.add_page()
+        self.add_page()
         self.chapter_title(num, title)
+        self.chapter_body(name)
+        
+    def print_text(self, name):
         self.chapter_body(name)
 
 title = "Sosito"
