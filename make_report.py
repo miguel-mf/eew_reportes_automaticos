@@ -33,7 +33,7 @@ pdf.image('images/Template.png', 110, 45, 85, 85) # SISMICIDAD ALERTADA
 pdf.caption('Figure 2: Izquierda: Sismicidad registrada durante el PERIODO_PERIODO de PERIODO_TIEMPO. Derecha: Alertas emitidas asociadas a sismos.',130)
 pdf.texts('text/reporte2.txt', 135) # Parrafo sobre las alertas emitidas y tiempos de alerta
 
-pdf.print_chapter(3, '', 'text/contexto1.txt')
+pdf.print_chapter(3, 'Exactitud de los eventos alertados', 'text/contexto1.txt')
 
 pdf.image('images/Template.png', 110, 45, 85, 85) # Errores de: magnitud, tiempo origen, distancia, profundidad
 
