@@ -6,7 +6,8 @@ class PDF(FPDF):
         # Background color
         self.set_fill_color(207, 207, 207)
         # Title
-        self.cell(0, 60, '%d. %s' % (num, label), 0, 1, 'L', 1)
+        self.set_y(30)
+        self.cell(0, 6, '%d. %s' % (num, label), 0, 1, 'L', 1)
         # Line break
         self.ln(4)
     def chapter_body(self, name):
@@ -42,27 +43,29 @@ class PDF(FPDF):
         self.set_font('Times', '', 10)
         self.multi_cell(0,7,txt)
     def append_chapter(self, num, label, name):
+        with open(name, 'rb') as fh:
+            txt = fh.read().decode('utf-8')
         self.set_font('Times', '', 12)
         self.set_fill_color(207, 207, 207)
         self.cell(0, 6, '%d. %s' % (num, label), 0, 1, 'L', 1)
         self.multi_cell(0, 7, txt)
         self.ln()
-    def header(self):
+    #def header(self):
         # Arial bold 15
-        self.set_font('Times', 'B', 9)
+        #self.set_font('Times', 'B', 9)
         # Calculate width of title and position
         #w = self.get_string_width(title) + 6
-        self.set_x((210 - 1) / 2)
+        #self.set_x((210 - 1) / 2)
         # Colors of frame, background and text
         #self.set_draw_color(0, 80, 180)
         #self.set_fill_color(230, 230, 0)
-        self.set_text_color(0, 0, 0)
+        #self.set_text_color(0, 0, 0)
         # Thickness of frame (1 mm)
-        self.set_line_width(1)
+        #self.set_line_width(1)
         # Title
-        self.cell(1, 9, title, 1, 1, 'C', 1)
+        #self.cell(1, 9, title, 1, 1, 'C', 1)
         # Line break
-        self.ln(10)
+        #self.ln(10)
     def footer(self):
         self.set_y(-15)
         self.set_font('Times', 'I', 8)
