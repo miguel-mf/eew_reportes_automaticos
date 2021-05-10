@@ -6,7 +6,7 @@ class PDF(FPDF):
         # Background color
         self.set_fill_color(207, 207, 207)
         # Title
-        self.cell(0, 6, '%d. %s' % (num, label), 0, 1, 'L', 1)
+        self.cell(0, 60, '%d. %s' % (num, label), 0, 1, 'L', 1)
         # Line break
         self.ln(4)
     def chapter_body(self, name):
