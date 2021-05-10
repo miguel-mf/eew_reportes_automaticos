@@ -73,9 +73,9 @@ class PDF(FPDF):
 title = "Reporte alerta temprana"
 pdf = PDF()
 pdf.titles(title)
-pdf.logo('CSN.png', 0, 0, 60, 30)
+pdf.logo('images/CSN.png', 0, 0, 60, 30)
 pdf.set_author('Miguel Medina Flores')
-pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'textos/contexto1.txt')
-pdf.texts('textos/contexto2.txt', 240)
+pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'text/contexto1.txt')
+pdf.texts('text/contexto2.txt', 240)
 #pdf.print_chapter(2, 'THE PROS AND CONS', 'contexto2.txt')
 pdf.output(file_name, 'F')
