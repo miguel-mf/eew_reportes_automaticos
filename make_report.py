@@ -16,17 +16,18 @@ title = "Reporte alerta temprana"
 pdf = PDF()
 #pdf.titles(title)
 pdf.set_author('Miguel Medina Flores')
-pdf.set_margins(left=10,right=10,top=20)
+pdf.set_margins(left=20,right=20,top=20)
 pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'text/contexto1.txt')
 pdf.logo('images/CSN.png', 0, 0, 55, 26.7)
-pdf.image('images/Figura_Sismicidad.png', 20, 135, 170, 85)
-pdf.caption('Figura 1: Catalogo CSN sismos M>4.0 desde 2013 hasta 2020 en el norte de Chile.',220)
-pdf.texts('text/contexto2.txt', 240)
+pdf.image('images/Figura_Sismicidad.png', 20, 160, 170, 85)
+pdf.caption('Figura 1: Catalogo CSN sismos M>4.0 desde 2013 hasta 2020 en el norte de Chile.',245)
+pdf.texts('text/contexto2.txt', 270)
 
 pdf.append_chapter(2, 'Funcionamiento del sistema de alerta temprana', 'text/reporte1.txt')
-pdf.image('images/Template.png', 15, 200, 85, 85) # SISMICIDAD REGISTRADA
-pdf.image('images/Template.png', 105, 200, 85, 85) # SISMICIDAD ALERTADA
-pdf.caption('Figure 2: Izquierda: Sismicidad registrada durante el mes de Octubre 2020. Derecha: Alertas emitidas asociadas a sismos.',286)
+#pdf.add_page()
+pdf.image('images/Template.png', 15, 45, 85, 85) # SISMICIDAD REGISTRADA
+pdf.image('images/Template.png', 110, 45, 85, 85) # SISMICIDAD ALERTADA
+pdf.caption('Figure 2: Izquierda: Sismicidad registrada durante el mes de Octubre 2020. Derecha: Alertas emitidas asociadas a sismos.',130)
 
 pdf.output(file_name, 'F')
 
