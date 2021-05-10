@@ -1,0 +1,1 @@
+Durante el PERIODO_PERIODO de PERIODO_TIEMPO se registraron un total de CANTIDAD_SISMOS sismos de magnitud igual o superior a 3.0 por parte del Centro Sismológico Nacional, de los cuales CANTIDAD_SENSIBLES corresponden a sismos significativos o de magnitud superior a 5.0. La totalidad de los eventos se puede apreciar en la siguiente figura:
