@@ -23,11 +23,9 @@ pdf.caption('Figura 1: Catalogo CSN sismos M>4.0 desde 2013 hasta 2020 en el nor
 pdf.texts('text/contexto2.txt', 240)
 
 pdf.append_chapter(2, 'Funcionamiento del sistema de alerta temprana', 'text/reporte1.txt')
-pdf.image('images/Figura_Sismicidad.png', 15, 135, 85, 85) # SISMICIDAD REGISTRADA
-pdf.image('images/Figura_Sismicidad.png', 105, 135, 85, 85) # SISMICIDAD ALERTADA
-pdf.caption('Figure 2: Izquierda: Sismicidad registrada durante el mes de Octubre 2020. Derecha: Alertas emitidas asociadas a sismos.',220)
-
-
+pdf.image('images/Template.png', 15, 200, 85, 85) # SISMICIDAD REGISTRADA
+pdf.image('images/Template.png', 105, 200, 85, 85) # SISMICIDAD ALERTADA
+pdf.caption('Figure 2: Izquierda: Sismicidad registrada durante el mes de Octubre 2020. Derecha: Alertas emitidas asociadas a sismos.',286)
 
 pdf.output(file_name, 'F')
 
