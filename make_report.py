@@ -16,6 +16,7 @@ title = "Reporte alerta temprana"
 pdf = PDF()
 #pdf.titles(title)
 pdf.set_author('Miguel Medina Flores')
+pdf.set_margins(left=10,right=10,top=20)
 pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'text/contexto1.txt')
 pdf.logo('images/CSN.png', 0, 0, 55, 26.7)
 pdf.image('images/Figura_Sismicidad.png', 20, 135, 170, 85)
