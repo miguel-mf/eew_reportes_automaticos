@@ -1,0 +1,3 @@
+Al ser este un sistema de alerta temprana, la magnitud y ubicación del sismo se calcula rápidamente con los primeros segundos de señal. En este sentido, es esperable tener errores en estos parámetros si se compara con la ubicación final registrada para el catálogo del CSN. 
+
+Los errores (hipocentral y de magnitud) que se observan en este periodo de tiempo al comparar los eventos detectados por el sistema de alerta temprana con el catálogo de sismos del CSN son los siguientes: 
