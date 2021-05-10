@@ -2,11 +2,17 @@ from reportSettings import *
 file_name = "reporte.pdf"
 title = "Reporte alerta temprana"
 
+# Palabras a reemplazar:
+# PERIODO_PERIODO: mes, año, periodo
+# PERIODO_TIEMPO: Nombre del mes, Año, XX/XX/XXXX - YY/YY/YYYY  
+# CANTIDAD_SISMOS: Sismos >= 3.0
+# CANTIDAD_SENSIBLES: Sismos >= 5.0
+
 from fpdf import FPDF
 class PDF(FPDF):
     def header(self):
         # Arial bold 15
-        self.set_font('Arial', 'B', 9)
+        self.set_font('Times', 'B', 9)
         # Calculate width of title and position
         w = self.get_string_width(title) + 6
         self.set_x((210 - w) / 2)
@@ -24,14 +30,14 @@ class PDF(FPDF):
         # Position at 1.5 cm from bottom
         self.set_y(-15)
         # Arial italic 8
-        self.set_font('Arial', 'I', 8)
+        self.set_font('Times', 'I', 8)
         # Text color in gray
         self.set_text_color(128)
         # Page number
         self.cell(0, 10, 'Page ' + str(self.page_no()), 0, 0, 'C')
     def chapter_title(self, num, label):
         # Arial 12
-        self.set_font('Arial', '', 12)
+        self.set_font('Times', '', 12)
         # Background color
         self.set_fill_color(207, 207, 207)
         # Title
@@ -75,6 +81,14 @@ class PDF(FPDF):
         self.set_text_color(0,0,0)
         self.set_font('Times', '', 10)
         self.multi_cell(0,7,txt)
+    def append_chapter(self, num, title, name):
+        self.set_font('Times', '', 12)
+        self.set_fill_color(207, 207, 207)
+        self.cell(0, 6, '%d. %s' % (num, label), 0, 1, 'L', 1)
+        
+        self.multi_cell(0, 7, txt)
+        # Line break
+        self.ln()
 
 pdf = PDF()
 #pdf.titles(title)
@@ -84,5 +98,4 @@ pdf.logo('images/CSN.png', 0, 0, 60, 30)
 pdf.image('images/Figura_Sismicidad.png', 20, 135, 170, 85)
 pdf.caption('Figura 1: Catalogo CSN sismos M>4.0 desde 2013 hasta 2020 en el norte de Chile.',220)
 pdf.texts('text/contexto2.txt', 240)
-#pdf.print_chapter(2, 'THE PROS AND CONS', 'contexto2.txt')
 pdf.output(file_name, 'F')
