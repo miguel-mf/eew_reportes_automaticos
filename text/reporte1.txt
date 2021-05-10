@@ -1,3 +1,4 @@
+
 El funcionamiento del sistema de alerta temprana se basa en los resultados obtenidos para eventos interplaca y de profundidad intermedia, es decir todos los eventos de profundidad no superior a los 150 km.
 
 Para efectos de este reporte, los eventos profundos no son considerados ya que tienden a ser de menor magnitud y a registrar menores intensidades (poco sensibles). Sin embargo, el sistema de alerta temprana puede generar alertas para algunos de estos eventos.
