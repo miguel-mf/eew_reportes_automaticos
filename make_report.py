@@ -40,7 +40,7 @@ class PDF(FPDF):
     def chapter_body(self, name):
         # Read text file
         with open(name, 'rb') as fh:
-            txt = fh.read().decode('latin-1')
+            txt = fh.read().decode('utf-8')
         # Times 12
         self.set_font('Times', '', 12)
         # Output justified text
@@ -58,11 +58,11 @@ class PDF(FPDF):
         self.image(name, x, y, w, h)
     def texts(self, name):
         with open(name, 'rb') as fh:
-            txt = fh.read().decode('latin-1')
+            txt = fh.read().decode('utf-8')
         self.set_xy(10.0,80.0)
         self.set_text_color(0,0,0)
         self.set_font('Times', '', 12)
-        self.multi_cell(0,7,txt)
+        self.multi_cell(0,10,txt)
     def titles(self, title):
         self.add_page()
         self.set_xy(0.0,0.0)
@@ -75,7 +75,7 @@ pdf = PDF()
 pdf.titles(title)
 pdf.logo('CSN.png', 0, 0, 60, 30)
 pdf.set_author('Miguel Medina Flores')
-pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'texto/contexto1.txt')
-pdf.texts('texto/contexto2.txt')
+pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'textos/contexto1.txt')
+pdf.texts('textos/contexto2.txt')
 #pdf.print_chapter(2, 'THE PROS AND CONS', 'contexto2.txt')
 pdf.output(file_name, 'F')
