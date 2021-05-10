@@ -5,7 +5,7 @@ from fpdf import FPDF
 class PDF(FPDF):
     def header(self):
         # Arial bold 15
-        self.set_font('Arial', 'B', 15)
+        self.set_font('Arial', 'B', 9)
         # Calculate width of title and position
         w = self.get_string_width(title) + 6
         self.set_x((210 - w) / 2)
@@ -19,7 +19,6 @@ class PDF(FPDF):
         self.cell(w, 9, title, 1, 1, 'C', 1)
         # Line break
         self.ln(10)
-
     def footer(self):
         # Position at 1.5 cm from bottom
         self.set_y(-15)
@@ -29,7 +28,6 @@ class PDF(FPDF):
         self.set_text_color(128)
         # Page number
         self.cell(0, 10, 'Page ' + str(self.page_no()), 0, 0, 'C')
-
     def chapter_title(self, num, label):
         # Arial 12
         self.set_font('Arial', '', 12)
@@ -39,7 +37,6 @@ class PDF(FPDF):
         self.cell(0, 6, 'Chapter %d : %s' % (num, label), 0, 1, 'L', 1)
         # Line break
         self.ln(4)
-
     def chapter_body(self, name):
         # Read text file
         with open(name, 'rb') as fh:
@@ -53,20 +50,30 @@ class PDF(FPDF):
         # Mention in italics
         self.set_font('', 'I')
         self.cell(0, 5, '(end of excerpt)')
-
     def print_chapter(self, num, title, name):
         self.add_page()
         self.chapter_title(num, title)
         self.chapter_body(name)
-        
-    def print_text(self, name):
-        self.chapter_body(name)
+    def logo(self, name, x, y, w, h)
+        self.image(name, x, y, w, h)
+    def texts(self, name)
+        with open(name, 'rb') as fh:
+            txt = fh.read().decode('latin-1')
+        self.set_xy(10.0,80.0)
+        self.set_text_color(0,0,0)
+        self.set_font('Times', '', 12)
+        self.multi_cell(0,10,txt)
+    def titles(self, title)
+        self.set_xy(0.0,0.0)
+        self.set_text_color(0,0,0)
+        self.set_font('Times', 'B', 14)
+        self.cell(w=210.0, h=40.0, aling='C', txt=title, border=0)
 
 title = "Sosito"
 pdf = PDF()
-pdf.set_title(title)
+pdf.titles(title)
 pdf.set_author('Miguel Medina Flores')
 pdf.print_chapter(1, '', '20k_c1.txt')
-pdf.chapter_body('20k_c2.txt')
+pdf.texts('20k_c2.txt')
 pdf.print_chapter(2, 'THE PROS AND CONS', '20k_c2.txt')
 pdf.output(file_name, 'F')
