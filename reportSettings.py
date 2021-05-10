@@ -41,7 +41,7 @@ class PDF(FPDF):
         self.set_text_color(0,0,0)
         self.set_font('Times', '', 10)
         self.multi_cell(0,7,txt)
-    def append_chapter(self, num, title, name):
+    def append_chapter(self, num, label, name):
         self.set_font('Times', '', 12)
         self.set_fill_color(207, 207, 207)
         self.cell(0, 6, '%d. %s' % (num, label), 0, 1, 'L', 1)
