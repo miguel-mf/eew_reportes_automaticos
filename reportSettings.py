@@ -47,28 +47,24 @@ class PDF(FPDF):
         self.cell(0, 6, '%d. %s' % (num, label), 0, 1, 'L', 1)
         self.multi_cell(0, 7, txt)
         self.ln()
-    #def header(self):
+    def header(self):
         # Arial bold 15
-        #self.set_font('Times', 'B', 9)
+        self.set_font('Times', 'B', 9)
         # Calculate width of title and position
         #w = self.get_string_width(title) + 6
-        #self.set_x((210 - w) / 2)
+        self.set_x((210 - 1) / 2)
         # Colors of frame, background and text
         #self.set_draw_color(0, 80, 180)
         #self.set_fill_color(230, 230, 0)
-        #self.set_text_color(0, 0, 0)
+        self.set_text_color(0, 0, 0)
         # Thickness of frame (1 mm)
-        #self.set_line_width(1)
+        self.set_line_width(1)
         # Title
-        #self.cell(w, 9, title, 1, 1, 'C', 1)
+        self.cell(1, 9, title, 1, 1, 'C', 1)
         # Line break
-        #self.ln(10)
-    #def footer(self):
-        # Position at 1.5 cm from bottom
-        #self.set_y(-15)
-        # Arial italic 8
-        #self.set_font('Times', 'I', 8)
-        # Text color in gray
-        #self.set_text_color(128)
-        # Page number
-        #self.cell(0, 10, 'Page ' + str(self.page_no()), 0, 0, 'C')
+        self.ln(10)
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Times', 'I', 8)
+        self.set_text_color(128)
+        self.cell(0, 10, 'Página ' + str(self.page_no()), 0, 0, 'C')
