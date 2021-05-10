@@ -44,34 +44,36 @@ class PDF(FPDF):
         # Times 12
         self.set_font('Times', '', 12)
         # Output justified text
-        self.multi_cell(0, 5, txt)
+        self.multi_cell(0, 7, txt)
         # Line break
         self.ln()
         # Mention in italics
         self.set_font('', 'I')
-        self.cell(0, 5, '(end of excerpt)')
+        self.cell(0, 5)
     def print_chapter(self, num, title, name):
         self.add_page()
         self.chapter_title(num, title)
         self.chapter_body(name)
-    def logo(self, name, x, y, w, h)
+    def logo(self, name, x, y, w, h):
         self.image(name, x, y, w, h)
-    def texts(self, name)
+    def texts(self, name):
         with open(name, 'rb') as fh:
             txt = fh.read().decode('latin-1')
         self.set_xy(10.0,80.0)
         self.set_text_color(0,0,0)
         self.set_font('Times', '', 12)
-        self.multi_cell(0,10,txt)
-    def titles(self, title)
+        self.multi_cell(0,7,txt)
+    def titles(self, title):
+        self.add_page()
         self.set_xy(0.0,0.0)
         self.set_text_color(0,0,0)
         self.set_font('Times', 'B', 14)
-        self.cell(w=210.0, h=40.0, aling='C', txt=title, border=0)
+        self.cell(w=210.0, h=40.0, txt=title, border=0)
 
-title = "Sosito"
+title = "Reporte alerta temprana"
 pdf = PDF()
 pdf.titles(title)
+pdf.logo('CSN.png', 0, 0, 60, 30)
 pdf.set_author('Miguel Medina Flores')
 pdf.print_chapter(1, '', '20k_c1.txt')
 pdf.texts('20k_c2.txt')
