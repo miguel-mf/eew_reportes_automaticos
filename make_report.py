@@ -49,20 +49,20 @@ class PDF(FPDF):
         self.ln()
         # Mention in italics
         self.set_font('', 'I')
-        self.cell(0, 5)
+        self.cell(0, 7)
     def print_chapter(self, num, title, name):
         self.add_page()
         self.chapter_title(num, title)
         self.chapter_body(name)
     def logo(self, name, x, y, w, h):
         self.image(name, x, y, w, h)
-    def texts(self, name):
+    def texts(self, name, y):
         with open(name, 'rb') as fh:
             txt = fh.read().decode('utf-8')
         self.set_xy(10.0,80.0)
         self.set_text_color(0,0,0)
         self.set_font('Times', '', 12)
-        self.multi_cell(0,10,txt)
+        self.multi_cell(0,7,txt)
     def titles(self, title):
         self.add_page()
         self.set_xy(0.0,0.0)
@@ -76,6 +76,6 @@ pdf.titles(title)
 pdf.logo('CSN.png', 0, 0, 60, 30)
 pdf.set_author('Miguel Medina Flores')
 pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'textos/contexto1.txt')
-pdf.texts('textos/contexto2.txt')
+pdf.texts('textos/contexto2.txt', 240)
 #pdf.print_chapter(2, 'THE PROS AND CONS', 'contexto2.txt')
 pdf.output(file_name, 'F')
