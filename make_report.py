@@ -1,6 +1,7 @@
 from reportSettings import *
 file_name = "reporte.pdf"
-title = "Reporte sismicidad"
+title = "Reporte alerta temprana"
+
 from fpdf import FPDF
 class PDF(FPDF):
     def header(self):
@@ -32,9 +33,9 @@ class PDF(FPDF):
         # Arial 12
         self.set_font('Arial', '', 12)
         # Background color
-        self.set_fill_color(200, 220, 255)
+        self.set_fill_color(207, 207, 207)
         # Title
-        self.cell(0, 6, 'Chapter %d : %s' % (num, label), 0, 1, 'L', 1)
+        self.cell(0, 6, '%d. %s' % (num, label), 0, 1, 'L', 1)
         # Line break
         self.ln(4)
     def chapter_body(self, name):
@@ -75,7 +76,6 @@ class PDF(FPDF):
         self.set_font('Times', '', 10)
         self.multi_cell(0,7,txt)
 
-title = "Reporte alerta temprana"
 pdf = PDF()
 pdf.titles(title)
 pdf.logo('images/CSN.png', 0, 0, 60, 30)
