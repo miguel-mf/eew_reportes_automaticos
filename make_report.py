@@ -69,6 +69,11 @@ class PDF(FPDF):
         self.set_text_color(0,0,0)
         self.set_font('Times', 'B', 14)
         self.cell(w=210.0, h=40.0, txt=title, border=0)
+    def caption(self, txt, y):
+        self.set_xy(30.0,y)
+        self.set_text_color(0,0,0)
+        self.set_font('Times', '', 10)
+        self.multi_cell(0,7,txt)
 
 title = "Reporte alerta temprana"
 pdf = PDF()
@@ -76,7 +81,8 @@ pdf.titles(title)
 pdf.logo('images/CSN.png', 0, 0, 60, 30)
 pdf.set_author('Miguel Medina Flores')
 pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'text/contexto1.txt')
-pdf.image('images/Figura_Sismicidad.png', 20, 150, 140, 140)
-pdf.texts('text/contexto2.txt', 240)
+pdf.image('images/Figura_Sismicidad.png', 20, 135, 170, 85)
+pdf.caption('Catalogo CSN sismos M>4.0 desde 2013 hasta 2020 en el norte de Chile.',220)
+pdf.texts('text/contexto2.txt', 230)
 #pdf.print_chapter(2, 'THE PROS AND CONS', 'contexto2.txt')
 pdf.output(file_name, 'F')
