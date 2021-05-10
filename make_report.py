@@ -59,7 +59,7 @@ class PDF(FPDF):
     def texts(self, name, y):
         with open(name, 'rb') as fh:
             txt = fh.read().decode('utf-8')
-        self.set_xy(10.0,80.0)
+        self.set_xy(10.0,y)
         self.set_text_color(0,0,0)
         self.set_font('Times', '', 12)
         self.multi_cell(0,7,txt)
