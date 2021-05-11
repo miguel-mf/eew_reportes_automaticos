@@ -35,17 +35,18 @@ false_db = TinyDB('false_alert_db.json')
 event_check = Query()
 time_file = 'tiempo_ultima_actualizacion.dat'
 model = TauPyModel(model="hussen.npz")
+Catalogo_CSN="sismos_enero-abril.dat"
 try:
-    with open(time_file, 'r') as f:
-        tiempo_ultima_actualizacion = f.read()
+	with open(time_file, 'r') as f:
+		tiempo_ultima_actualizacion = f.read()
 except:
-    # En caso de que el archivo no exista
-    tiempo_ultima_actualizacion = 1609459200 # 01-01-2021 0:00:00 EPOCH
-    with open(time_file, 'w') as f:
-        f.write(tiempo_ultima_actualizacion)
-        f.close()
+	# En caso de que el archivo no exista
+	tiempo_ultima_actualizacion = 1609459200 # 01-01-2021 0:00:00 EPOCH
+	with open(time_file, 'w') as f:
+		f.write(tiempo_ultima_actualizacion)
+		f.close()
 
-def tiempoViaje(ev_lat,ev_lon,loc_lat,loc_lon,dep)
+def tiempoViaje(ev_lat,ev_lon,loc_lat,loc_lon,dep):
 	dist_deg = locations2degrees(ev_lat,ev_lon,loc_lat,loc_lon)
 	arrivals= model.get_travel_times(source_depth_in_km=dep, distance_in_degree=dist_deg, phase_list='p')
 	if not arrivals: # Hay que revisar la fase "p" y "P", similar "s" y "S"
@@ -69,28 +70,28 @@ def tiempoViaje(ev_lat,ev_lon,loc_lat,loc_lon,dep)
 	return tiempos
 	
 def connect():
-    """ Funcion que se encarga de conectarse a las bases de datos 
-    y actualizar la base de datos para repores automaticos. """
-    conn = None
-    try:
-        params = config()
-        conn = psycopg2.connect(**params)
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    cur = conn.cursor()
-    
-    while True:
-        # Leer base de datos PSQL/EEWS
-        tiempo_ultima_actualizacion = time.time()
-        cur.execute('SELECT lon,lat,mag,time,modtime from epic.e2event where first_alert = true and modtime > %s order by modtime asc;' % (tiempo_ultima_actualizacion))
-        query = cur.fetchone()
-        if not query:
-            with open(time_file, 'w') as f:
-                f.write(tiempo_ultima_actualizacion)
-                f.close()
-            time.sleep(tiempo_espera)
-            continue
-        lon,lat,mag,ev_time,modtime = query
+	""" Funcion que se encarga de conectarse a las bases de datos 
+	y actualizar la base de datos para repores automaticos. """
+	conn = None
+	try:
+		params = config()
+		conn = psycopg2.connect(**params)
+	except (Exception, psycopg2.DatabaseError) as error:
+		print(error)
+	cur = conn.cursor()
+
+	while True:
+		# Leer base de datos PSQL/EEWS
+		tiempo_ultima_actualizacion = time.time()
+		cur.execute('SELECT lon,lat,mag,time,modtime from epic.e2event where first_alert = true and modtime > %s order by modtime asc;' % (tiempo_ultima_actualizacion))
+		query = cur.fetchone()
+		if not query:
+			with open(time_file, 'w') as f:
+				f.write(tiempo_ultima_actualizacion)
+				f.close()
+			time.sleep(tiempo_espera)
+			continue
+		lon,lat,mag,ev_time,modtime = query
 		# Leer base de datos CSN
 		df_CSN = pd.read_csv(Catalogo_CSN, dtype=str, sep=',', engine='python')
 		csn_lon = df_CSN['longitud'].astype(float).tolist()
@@ -113,7 +114,7 @@ def connect():
 				if prioridad_segun_mag < prioridad:
 					aux = float(string[i-1])
 					prioridad = prioridad_segun_mag
-			csn_mag.append(aux)		
+			csn_mag.append(aux)
 		# Cruzar las dos bases de datos y actualizar bases de datos de reporte y falsa alerta
 		aux = {'csn_date': csn_date, 'csn_lon': csn_lon, 'csn_lat': csn_lat, 'csn_dep': csn_dep, 'csn_mag': csn_mag}
 		sismo = pd.DataFrame(data=aux)
@@ -192,4 +193,4 @@ def connect():
 
 
 if __name__ == '__main__':
-    connect()
+	connect()
