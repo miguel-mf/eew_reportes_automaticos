@@ -1,7 +1,12 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import cartopy
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+from tinyDB import TinyDB, where
+
+db = TinyDB('report_db.json')
 
 def plotMap(ax, lonmin, lonmax, latmin, latmax, Convergencia=False, fosa=False):
     ax.set_xlim((lonmin, lonmax))
@@ -47,3 +52,29 @@ def plotMap(ax, lonmin, lonmax, latmin, latmax, Convergencia=False, fosa=False):
         LatFosa = np.asarray(fosa_ascii[:,1])
         deltaLon = 0.02
         ax.plot(LonFosa, LatFosa, '--k', linewidth=1.0)
+        
+def plotEarthquakeAssoc(latmin,latmax,lonmin,lonmax,tmin,tmax)
+    sta_csn = np.loadtxt('EstacionesCSN.txt', usecols=[1,2,3])
+    sta_eew = np.loadtxt('EstacionesAlex.txt', usecols=[1,2,3])
+    sta_alex = np.loadtxt('EstacionesAMSA.txt', usecols=[1,2,3])
+    colores = ['#3a3556','#f15918','#ffba00','#eec5d5','#b5afdb','#538a56','#85538a']
+    Escala = 15
+    Escala_Grafico = 1.5
+    f = plt.figure(figsize=(8*Escala_Grafico,11*Escala_Grafico))
+    ax = plt.axes(projection = ccrs.PlateCarree())
+    plot = plotMap(ax, lonmin, lonmax, latmin, latmax, Convergencia=True, fosa=True)
+    ax.plot(sta_csn[:,0], sta_csn[:,1], 'v', color='black', markeredgecolor='k', zorder=9)
+    ax.plot(sta_eew[:,0], sta_eew[:,1], 'v', color='red', markeredgecolor='k', zorder=9)
+    ax.plot(sta_alex[:,0], sta_alex[:,1], 'v', color='yellow', markeredgecolor='k', zorder=9)
+    query = db.search( (where.('csn_date') > tmin) & (where.('csn_date') < tmax) & (where.('csn_lat') > latmin) & (where.('csn_lat') < latmax) & (where.('csn_lon') > lonmin) & (where.('csn_lon') < lonmax) & (where.('alertado') == True))
+    for item in query:
+        ax.plot([item['csn_lon'],item['eew_lon']], [item['lat_CSN'],item['eew_lat']], '-k')
+        ax.scatter(item['csn_lon'], item['csn_lat'], s=df_Aux['mag_CSN']**2*Escala, 
+                    color=colores[0], zorder=10, alpha=0.5, label="CSN")
+        ax.scatter(item['eew_lon'], item['eew_lat'], s=df_Aux['mag_Epic']**2*Escala, 
+                    color=colores[1], zorder=10, alpha=0.5, label="Epic")
+    lgnd = plt.legend(loc='upper right', fontsize=16, scatterpoints=1)
+    lgnd.legendHandles[0]._sizes = [4.5**2*Escala]
+    lgnd.legendHandles[1]._sizes = [4.5**2*Escala]
+    plt.savefig(CarpetaFiguras+'Localizacion_%s.png' % (Nombres_Output[i]), bbox_inches='tight', dpi=200)
+      
