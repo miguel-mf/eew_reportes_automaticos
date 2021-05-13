@@ -211,8 +211,8 @@ def connect():
 				print(1,ev_time[i])
 				
 				report_db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],
-						  	'err_mag' = mag[i] - csn_mag[evento], 'err_dist' : distancia, 
-						  	'err_dep' : dep[i] - csn_dep[evento], 'err_otime' : ev_time[i] - csn_date[evento],
+						  	'err_mag' = csn_mag[evento] - mag[i], 'err_dist' : distancia, 
+						  	'err_dep' : csn_dep[evento] - dep[i], 'err_otime' : csn_date[evento] - ev_time[i],
 					  		'alert_time_centinela_P': alert_time_centinela_P, 'alert_time_centinela_S': alert_time_centinela_S,
 							'alert_time_santiago_P': alert_time_santiago_P, 'alert_time_santiago_S': alert_time_santiago_S,
 					   		'eew_comp_time': eew_comp_time,'alertado': True}, where('csn_date') == csn_date[evento])
@@ -228,8 +228,8 @@ def connect():
 					report_db.update({'rep_date': aux['eew_date'],'rep_lon': aux['eew_lon'],'rep_lat': aux['eew_lat'],
 							   'rep_mag': aux['eew_mag'], 'doble_alerta': True}, where('csn_date') == csn_date[evento])
 					report_db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],
-								'err_mag' = mag[i] - csn_mag[evento], 'err_dist' : dist_nuevo, 
-								'err_dep' : dep[i] - csn_dep[evento], 'err_otime' : ev_time[i] - csn_date[evento],
+								'err_mag' = csn_mag[evento] - mag[i], 'err_dist' : dist_nuevo, 
+								'err_dep' : csn_dep[evento] - dep[i], 'err_otime' : csn_date[evento] - ev_time[i],
 					  			'alert_time_centinela_P': alert_time_centinela_P, 'alert_time_centinela_S': alert_time_centinela_S,
 								'alert_time_santiago_P': alert_time_santiago_P, 'alert_time_santiago_S': alert_time_santiago_S,
 					   			'eew_comp_time': eew_comp_time,'alertado': True}, where('csn_date') == csn_date[evento])
