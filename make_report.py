@@ -1,7 +1,5 @@
 from reportSettings import *
 from plotUtil import *
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 file_name = "reporte.pdf"
 title = "Reporte alerta temprana"
 
