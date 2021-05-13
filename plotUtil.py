@@ -53,7 +53,7 @@ def plotMap(ax, lonmin, lonmax, latmin, latmax, Convergencia=False, fosa=False):
         deltaLon = 0.02
         ax.plot(LonFosa, LatFosa, '--k', linewidth=1.0)
         
-def plotEarthquakeAssoc(latmin,latmax,lonmin,lonmax,tmin,tmax)
+def plotEarthquakeAssoc(filename,latmin,latmax,lonmin,lonmax,tmin,tmax)
     sta_csn = np.loadtxt('EstacionesCSN.txt', usecols=[1,2,3])
     sta_eew = np.loadtxt('EstacionesAlex.txt', usecols=[1,2,3])
     sta_alex = np.loadtxt('EstacionesAMSA.txt', usecols=[1,2,3])
@@ -66,15 +66,18 @@ def plotEarthquakeAssoc(latmin,latmax,lonmin,lonmax,tmin,tmax)
     ax.plot(sta_csn[:,0], sta_csn[:,1], 'v', color='black', markeredgecolor='k', zorder=9)
     ax.plot(sta_eew[:,0], sta_eew[:,1], 'v', color='red', markeredgecolor='k', zorder=9)
     ax.plot(sta_alex[:,0], sta_alex[:,1], 'v', color='yellow', markeredgecolor='k', zorder=9)
-    query = db.search( (where.('csn_date') > tmin) & (where.('csn_date') < tmax) & (where.('csn_lat') > latmin) & (where.('csn_lat') < latmax) & (where.('csn_lon') > lonmin) & (where.('csn_lon') < lonmax) & (where.('alertado') == True))
+    query = db.search( (where.('csn_date') > tmin) & (where.('csn_date') < tmax)    \ 
+                      & (where.('csn_lat') > latmin) & (where.('csn_lat') < latmax) \ 
+                      & (where.('csn_lon') > lonmin) & (where.('csn_lon') < lonmax) \
+                      & (where.('alertado') == True))
     for item in query:
         ax.plot([item['csn_lon'],item['eew_lon']], [item['lat_CSN'],item['eew_lat']], '-k')
-        ax.scatter(item['csn_lon'], item['csn_lat'], s=df_Aux['mag_CSN']**2*Escala, 
+        ax.scatter(item['csn_lon'], item['csn_lat'], s=item['csn_mag']**2*Escala, 
                     color=colores[0], zorder=10, alpha=0.5, label="CSN")
-        ax.scatter(item['eew_lon'], item['eew_lat'], s=df_Aux['mag_Epic']**2*Escala, 
+        ax.scatter(item['eew_lon'], item['eew_lat'], s=item['eew_mag']**2*Escala, 
                     color=colores[1], zorder=10, alpha=0.5, label="Epic")
     lgnd = plt.legend(loc='upper right', fontsize=16, scatterpoints=1)
     lgnd.legendHandles[0]._sizes = [4.5**2*Escala]
     lgnd.legendHandles[1]._sizes = [4.5**2*Escala]
-    plt.savefig(CarpetaFiguras+'Localizacion_%s.png' % (Nombres_Output[i]), bbox_inches='tight', dpi=200)
+    plt.savefig(filename, bbox_inches='tight', dpi=200)
       
