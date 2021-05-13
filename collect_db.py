@@ -89,7 +89,7 @@ def connect():
 		# Leer base de datos PSQL/EEWS
 		#tiempo_ultima_actualizacion = time.time()
 		global tiempo_ultima_actualizacion
-		cur.execute('SELECT lon,lat,mag,time,modtime from epic.e2event where first_alert = true and modtime > %s and mag > 2.5 order by modtime asc;' % (str(tiempo_ultima_actualizacion)))
+		cur.execute('SELECT lon,lat,mag,dep,time,modtime from epic.e2event where first_alert = true and modtime > %s and mag > 2.5 order by modtime asc;' % (str(tiempo_ultima_actualizacion)))
 		query = cur.fetchall()
 		if not query:
 			print("se cae aca")
@@ -103,14 +103,16 @@ def connect():
 		lon = []
 		lat = []
 		mag = []
+		dep = []
 		ev_time = []
 		modtime = []
 		for row in query:
 			lon.append(row[0])
 			lat.append(row[1])
 			mag.append(row[2])
-			ev_time.append(row[3])
-			modtime.append(row[4])
+			dep.append(row[3])
+			ev_time.append(row[4])
+			modtime.append(row[5])
 		#lon = query['lon']
 		#lat = query['lat']
 		#mag = query['mag']
@@ -150,7 +152,7 @@ def connect():
 		for i in range(0,len(csn_date)):
 			report_db.insert({'csn_date': csn_date[i], 'csn_lon': csn_lon[i], 'csn_lat': csn_lat[i], 
 					'csn_dep': csn_dep[i], 'csn_mag': csn_mag[i],
-					'eew_date': 0,'eew_lon': 0,'eew_lat': 0,'eew_mag': 0,
+					'eew_date': 0,'eew_lon': 0,'eew_lat': 0,'eew_mag': 0, 'eew_dep' : 0,
 					'err_mag': 0,'err_dist': 0,'err_dep': 0,'err_otime': 0,
 					'alert_time_centinela_P': 0, 'alert_time_centinela_S': 0,
 					'alert_time_santiago_P': 0, 'alert_time_santiago_S': 0,
@@ -185,7 +187,7 @@ def connect():
 					posibles_eventos.append(j)
 					desde = j
 			if not posibles_eventos: 
-				false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'time':modtime[i]})
+				false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'dep':dep[i], 'time':modtime[i]})
 				continue
 			distancia = 300.0
 			evento = []
@@ -196,9 +198,9 @@ def connect():
 					evento = ev
 					distancia = aux
 			if not evento: 
-				false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'time':modtime[i]})
+				false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'dep':dep[i], 'time':modtime[i]})
 				continue
-			false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'time':modtime[i]})
+			#false_alert_db.insert({'origin_time':ev_time[i], 'lon':lon[i], 'lat':lat[i], 'mag':mag[i], 'time':modtime[i]})
 			eew_comp_time = modtime[i] - csn_date[evento]
 			#print(lat[i],lon[i],-23.01, -69.10,csn_dep[evento])
 			aux = tiempoViaje(lat[i],lon[i],-23.01, -69.10,csn_dep[evento])
@@ -210,8 +212,8 @@ def connect():
 			if report_db.get((where('csn_date') == csn_date[evento]) & ~(where('eew_date') == 0)) == None:
 				print(1,ev_time[i])
 				
-				report_db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],
-						  	'err_mag' = csn_mag[evento] - mag[i], 'err_dist' : distancia, 
+				report_db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],'eew_dep': dep[i],
+						  	'err_mag' : csn_mag[evento] - mag[i], 'err_dist' : distancia, 
 						  	'err_dep' : csn_dep[evento] - dep[i], 'err_otime' : csn_date[evento] - ev_time[i],
 					  		'alert_time_centinela_P': alert_time_centinela_P, 'alert_time_centinela_S': alert_time_centinela_S,
 							'alert_time_santiago_P': alert_time_santiago_P, 'alert_time_santiago_S': alert_time_santiago_S,
@@ -225,10 +227,10 @@ def connect():
 				nota_anterior = abs(aux['eew_mag']-aux['csn_mag'])/2.0 + abs(aux['eew_date']-aux['csn_date'])/10.0 + dist_anterior/70.0
 				if 2*nota_nueva < nota_anterior:
 					print(2,ev_time[i])
-					report_db.update({'rep_date': aux['eew_date'],'rep_lon': aux['eew_lon'],'rep_lat': aux['eew_lat'],
+					report_db.update({'rep_date': aux['eew_date'],'rep_lon': aux['eew_lon'],'rep_lat': aux['eew_lat'],'rep_dep': aux['eew_dep'],
 							   'rep_mag': aux['eew_mag'], 'doble_alerta': True}, where('csn_date') == csn_date[evento])
-					report_db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],
-								'err_mag' = csn_mag[evento] - mag[i], 'err_dist' : dist_nuevo, 
+					report_db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],'eew_dep': dep[i],
+								'err_mag' : csn_mag[evento] - mag[i], 'err_dist' : dist_nuevo, 
 								'err_dep' : csn_dep[evento] - dep[i], 'err_otime' : csn_date[evento] - ev_time[i],
 					  			'alert_time_centinela_P': alert_time_centinela_P, 'alert_time_centinela_S': alert_time_centinela_S,
 								'alert_time_santiago_P': alert_time_santiago_P, 'alert_time_santiago_S': alert_time_santiago_S,
@@ -236,7 +238,7 @@ def connect():
 				else:
 					print(3,ev_time[i])
 					#print(i,3,csn_date[evento],report_db.get((where('csn_date') == csn_date[evento]) & ~ (where('eew_date') == 0)))
-					report_db.update({'rep_date': ev_time[i],'rep_lon': lon[i],'rep_lat': lat[i],
+					report_db.update({'rep_date': ev_time[i],'rep_lon': lon[i],'rep_lat': lat[i], 'rep_dep': dep[i],
 							   'rep_mag': mag[i], 'doble_alerta': True}, where('csn_date') == csn_date[evento])
 			# Cambiar tiempo de ultima actualizacion y esperar para no sobrecargar la base psql
 		with open(time_file, 'w') as f:
