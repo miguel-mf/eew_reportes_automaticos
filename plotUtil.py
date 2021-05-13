@@ -5,9 +5,6 @@ import cartopy
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from tinyDB import TinyDB, where
-
-db = TinyDB('report_db.json')
-
 def plotMap(ax, lonmin, lonmax, latmin, latmax, Convergencia=False, fosa=False):
     ax.set_xlim((lonmin, lonmax))
     ax.set_ylim((latmin, latmax))
@@ -53,7 +50,8 @@ def plotMap(ax, lonmin, lonmax, latmin, latmax, Convergencia=False, fosa=False):
         deltaLon = 0.02
         ax.plot(LonFosa, LatFosa, '--k', linewidth=1.0)
         
-def plotEarthquakeAssoc(filename,latmin,latmax,lonmin,lonmax,tmin,tmax)
+def plotEarthquakeAssoc(filename,latmin,latmax,lonmin,lonmax,tmin,tmax,db_name):
+    db = TinyDB(db_name)
     sta_csn = np.loadtxt('EstacionesCSN.txt', usecols=[1,2,3])
     sta_eew = np.loadtxt('EstacionesAlex.txt', usecols=[1,2,3])
     sta_alex = np.loadtxt('EstacionesAMSA.txt', usecols=[1,2,3])
@@ -80,4 +78,32 @@ def plotEarthquakeAssoc(filename,latmin,latmax,lonmin,lonmax,tmin,tmax)
     lgnd.legendHandles[0]._sizes = [4.5**2*Escala]
     lgnd.legendHandles[1]._sizes = [4.5**2*Escala]
     plt.savefig(filename, bbox_inches='tight', dpi=200)
-      
+
+def plotErrorHist(filename,latmin,latmax,lonmin,lonmax,tmin,tmax,db_name):
+    db = TinyDB(db_name)
+    query = db.search(  (where.('csn_date') > tmin) & (where.('csn_date') < tmax)   \ 
+                      & (where.('csn_lat') > latmin) & (where.('csn_lat') < latmax) \ 
+                      & (where.('csn_lon') > lonmin) & (where.('csn_lon') < lonmax) \
+                      & (where.('alertado') == True))
+    err_dist = []
+    err_dep = []
+    err_mag = []
+    err_otime = []
+    for item in query:
+        err_dist.append(item['err_dist'])
+        err_dep.append(item['err_dep'])
+        err_mag.append(item['err_mag'])
+        err_otime.append(item['err_otime'])
+    fig, ((ax1, ax2, ax0), (ax3, ax4, ax5)) = plt.subplots(2, 3, figsize=(12,8))
+    ax0.axis('off')
+    hist = ax1.hist(err_mag, bins=31, histtype='bar', alpha=0.5, color=colores[0], edgecolor='black', linewidth=1)
+    hist = ax2.hist(err_dist, bins=31, histtype='bar', alpha=0.5, color=colores[1], edgecolor='black', linewidth=1)
+    hist = ax3.hist(err_dep, bins=31, histtype='bar', alpha=0.5, color=colores[2], edgecolor='black', linewidth=1)
+    hist = ax4.hist(err_otime, bins=31, histtype='bar', alpha=0.5, color=colores[3], edgecolor='black', linewidth=1)
+    ax1.set_ylabel('Frecuencia', fontsize=14)
+    ax1.set_xlabel('Error Magnitud\n(CSN - EEW)', fontsize=14)
+    ax2.set_xlabel('Error Distancia [km]', fontsize=14)
+    ax3.set_xlabel('Error Prof [km]', fontsize=14)
+    ax4.set_xlabel('Error Tiempo origen [s]', fontsize=14)
+    ax5.set_xlabel('Tiempo alerta [s]', fontsize=14)
+    plt.savefig(filename, bbox_inches='tight', dpi=200)
