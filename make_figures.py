@@ -22,6 +22,6 @@ tmin = calendar.timegm(aux.timetuple())
 aux = datetime.datetime.strptime(Fecha_Termino, '%d-%m-%Y')
 tmax = calendar.timegm(aux.timetuple())
 
-plotEarthquakeAssoc(figura_sismo,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
-plotErrorHist(figura_histo,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
+#plotEarthquakeAssoc(figura_sismo,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
+#plotErrorHist(figura_histo,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
 plotTiempoAlerta(figura_centinela,figura_santiago,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
