@@ -1,10 +1,12 @@
 from reportSettings import *
 from plotUtil import *
+import datetime
+import calendar
 
 file_name = "reporte.pdf"
 title = "Reporte alerta temprana"
-Fecha_Inicio = '04-12-2020'  # Formato: DD-MM-YYYY
-Fecha_Termino = '11-05-2020' # Formato: DD-MM-YYYY
+Fecha_Inicio = '04-12-2020'  # Formato: DD-MM-YYYY (GMT)
+Fecha_Termino = '11-05-2021' # Formato: DD-MM-YYYY (GMT)
 lonmin = -74
 lonmax = -66
 latmin = -26
@@ -19,8 +21,15 @@ latmax = -16.5
 
 ### GENERAR FIGURAS (TEMPORALES)
 db = 'report_db.json'
-figura_sismo = 'figura_sismo.pdf'
-figura_histo = 'figura_histo.pdf'
+figura_sismo = 'figura_sismo.png'
+figura_histo = 'figura_histo.png'
+
+aux = datetime.datetime.strptime(Fecha_Inicio, '%d-%m-%Y')
+tmin = calendar.timegm(aux.timetuple())
+aux = datetime.datetime.strptime(Fecha_Termino, '%d-%m-%Y')
+tmax = calendar.timegm(aux.timetuple())
+
+
 plotEarthquakeAssoc(figura_sismo,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
 plotErrorHist(figura_histo,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
 ### GENERAR DOCUMENTO 
@@ -35,8 +44,8 @@ pdf.texts('text/contexto2.txt', 270)
 
 pdf.append_chapter(2, 'Sismicidad registrada y alertas emitidas', 'text/reporte1.txt')
 #pdf.add_page()
-pdf.image('images/Template.png', 15, 45, 85, 85) # SISMICIDAD REGISTRADA
-pdf.image('images/Template.png', 110, 45, 85, 85) # SISMICIDAD ALERTADA
+pdf.image(figura_sismo, 15, 45, 85, 85) # SISMICIDAD REGISTRADA
+pdf.image(figura_histo, 110, 45, 85, 85) # SISMICIDAD ALERTADA
 pdf.caption('Figure 2: Izquierda: Sismicidad registrada durante el PERIODO_PERIODO de PERIODO_TIEMPO. Derecha: Alertas emitidas asociadas a sismos.',130)
 pdf.texts('text/reporte2.txt', 135) # Parrafo sobre las alertas emitidas y tiempos de alerta
 
