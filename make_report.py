@@ -1,4 +1,7 @@
 from reportSettings import *
+from plotUtil import *
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 file_name = "reporte.pdf"
 title = "Reporte alerta temprana"
 
@@ -17,7 +20,6 @@ Fecha_Termino = 'DD-MM-YYYY' # Formato: DD-MM-YYYY
 
 
 pdf = PDF()
-#pdf.titles(title)
 pdf.set_author('Miguel Medina Flores')
 pdf.set_margins(left=20,right=20,top=20)
 pdf.print_chapter(1, 'Contexto sísmico del norte de Chile', 'text/contexto1.txt')
