@@ -151,6 +151,7 @@ def connect():
 			report_db.insert({'csn_date': csn_date[i], 'csn_lon': csn_lon[i], 'csn_lat': csn_lat[i], 
 					'csn_dep': csn_dep[i], 'csn_mag': csn_mag[i],
 					'eew_date': 0,'eew_lon': 0,'eew_lat': 0,'eew_mag': 0,
+					'err_mag': 0,'err_dist': 0,'err_dep': 0,'err_otime': 0,
 					'alert_time_centinela_P': 0, 'alert_time_centinela_S': 0,
 					'alert_time_santiago_P': 0, 'alert_time_santiago_S': 0,
 					'eew_comp_time': 0,'alertado': False, 'doble_alerta' : False})
@@ -208,7 +209,10 @@ def connect():
 			alert_time_santiago_S = aux['S'] - eew_comp_time
 			if report_db.get((where('csn_date') == csn_date[evento]) & ~(where('eew_date') == 0)) == None:
 				print(1,ev_time[i])
+				
 				report_db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],
+						  	'err_mag' = mag[i] - csn_mag[evento], 'err_dist' : distancia, 
+						  	'err_dep' : dep[i] - csn_dep[evento], 'err_otime' : ev_time[i] - csn_date[evento],
 					  		'alert_time_centinela_P': alert_time_centinela_P, 'alert_time_centinela_S': alert_time_centinela_S,
 							'alert_time_santiago_P': alert_time_santiago_P, 'alert_time_santiago_S': alert_time_santiago_S,
 					   		'eew_comp_time': eew_comp_time,'alertado': True}, where('csn_date') == csn_date[evento])
@@ -219,11 +223,13 @@ def connect():
 				dist_anterior = 111.19*locations2degrees(lat[i], lon[i], aux['eew_lat'], aux['eew_lon'])
 				nota_nueva = abs(mag[i]-aux['csn_mag'])/2.0 + abs(ev_time[i]-aux['csn_date'])/20.0 + dist_nuevo/100
 				nota_anterior = abs(aux['eew_mag']-aux['csn_mag'])/2.0 + abs(aux['eew_date']-aux['csn_date'])/10.0 + dist_anterior/70.0
-				if nota_nueva < nota_anterior and modtime[i] < aux['csn_date'] + aux['eew_comp_time']:
+				if 2*nota_nueva < nota_anterior:
 					print(2,ev_time[i])
 					report_db.update({'rep_date': aux['eew_date'],'rep_lon': aux['eew_lon'],'rep_lat': aux['eew_lat'],
 							   'rep_mag': aux['eew_mag'], 'doble_alerta': True}, where('csn_date') == csn_date[evento])
 					report_db.update({'eew_date': ev_time[i],'eew_lon': lon[i],'eew_lat': lat[i],'eew_mag': mag[i],
+								'err_mag' = mag[i] - csn_mag[evento], 'err_dist' : dist_nuevo, 
+								'err_dep' : dep[i] - csn_dep[evento], 'err_otime' : ev_time[i] - csn_date[evento],
 					  			'alert_time_centinela_P': alert_time_centinela_P, 'alert_time_centinela_S': alert_time_centinela_S,
 								'alert_time_santiago_P': alert_time_santiago_P, 'alert_time_santiago_S': alert_time_santiago_S,
 					   			'eew_comp_time': eew_comp_time,'alertado': True}, where('csn_date') == csn_date[evento])
