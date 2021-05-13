@@ -37,14 +37,14 @@ event_check = Query()
 time_file = 'tiempo_ultima_actualizacion.dat'
 #model = TauPyModel(model="hussen.npz")
 model = TauPyModel(model="prem")
-Catalogo_CSN="sismos_enero-abril.dat"
+Catalogo_CSN="sismos_diciembre-abril.txt"
 #tiempo_ultima_actualizacion = 1609459200
 try:
 	with open(time_file, 'r') as f:
 		tiempo_ultima_actualizacion = int(f.read())
 except:
 	# En caso de que el archivo no exista
-	tiempo_ultima_actualizacion = 1609459200 # 01-01-2021 0:00:00 EPOCH
+	tiempo_ultima_actualizacion = 1607040000 # 04-12-2020 0:00:00 EPOCH
 	with open(time_file, 'w') as f:
 		f.write(str(tiempo_ultima_actualizacion))
 		f.close()
@@ -96,8 +96,9 @@ def connect():
 			with open(time_file, 'w') as f:
 				f.write(str(tiempo_ultima_actualizacion))
 				f.close()
-			time.sleep(tiempo_espera)
+			#time.sleep(tiempo_espera)
 			tiempo_ultima_actualizacion = time.time()
+			time.sleep(tiempo_espera)
 			continue
 		lon = []
 		lat = []
@@ -236,8 +237,9 @@ def connect():
 			f.write(str(tiempo_ultima_actualizacion))
 			f.close()
 		print("listo")
-		time.sleep(tiempo_espera)
+		#time.sleep(tiempo_espera)
 		tiempo_ultima_actualizacion = time.time()
+		time.sleep(tiempo_espera)
 
 if __name__ == '__main__':
 	connect()
