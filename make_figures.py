@@ -14,6 +14,8 @@ latmax = -16.5
 db = 'report_db.json'
 figura_sismo = 'figura_sismo.png'
 figura_histo = 'figura_histo.png'
+figura_centinela = 'figura_centinela.png'
+figura_santiago = 'figura_santiago.png'
 
 aux = datetime.datetime.strptime(Fecha_Inicio, '%d-%m-%Y')
 tmin = calendar.timegm(aux.timetuple())
@@ -22,3 +24,4 @@ tmax = calendar.timegm(aux.timetuple())
 
 plotEarthquakeAssoc(figura_sismo,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
 plotErrorHist(figura_histo,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
+plotTiempoAlerta(figura_centinela,figura_santiago,latmin,latmax,lonmin,lonmax,tmin,tmax,db)
