@@ -109,3 +109,33 @@ def plotErrorHist(filename,latmin,latmax,lonmin,lonmax,tmin,tmax,db_name):
     ax3.set_xlabel('Error Prof [km]', fontsize=14)
     ax4.set_xlabel('Error Tiempo origen [s]', fontsize=14)
     plt.savefig(filename, bbox_inches='tight', dpi=200)
+
+def plotTiempoAlerta(filename1,filename2,latmin,latmax,lonmin,lonmax,tmin,tmax,db_name):
+    colores = ['#3a3556','#f15918','#ffba00','#eec5d5','#b5afdb','#538a56','#85538a']
+    Escala = 15
+    Escala_Grafico = 1.5
+    db = TinyDB(db_name)
+    query = db.search(  (where('csn_date') > tmin) & (where('csn_date') < tmax)
+                      & (where('csn_lat') > latmin) & (where('csn_lat') < latmax)
+                      & (where('csn_lon') > lonmin) & (where('csn_lon') < lonmax)
+                      & (where('alertado') == True))
+    tiempo_alerta_centinela = []
+    tiempo_alerta_santiago = []
+    for item in query:
+        tiempo_alerta_centinela.append(item['alert_time_centinela_S'])
+        tiempo_alerta_santiago.append(item['alert_time_santiago_S'])
+    f = plt.figure(figsize=(6*Escala_Grafico,3*Escala_Grafico))
+    ax = plt.axes()
+    bins = np.linspace(-60,60,13)
+    hist = ax.hist(tiempo_alerta_centinela, bins=bins, histtype='bar', alpha=0.5, color=colores[0], edgecolor='black', linewidth=1)
+    fig.set_ylabel('Frecuencia', fontsize=14)
+    fig.set_xlabel('Tiempo Alerta (Centinela)', fontsize=14)
+    plt.savefig(filename1, bbox_inches='tight', dpi=200)
+
+    f = plt.figure(figsize=(6*Escala_Grafico,3*Escala_Grafico))
+    ax = plt.axes()
+    bins = np.linspace(-60,60,13)
+    hist = ax.hist(tiempo_alerta_santiago, bins=bins, histtype='bar', alpha=0.5, color=colores[0], edgecolor='black', linewidth=1)
+    fig.set_ylabel('Frecuencia', fontsize=14)
+    fig.set_xlabel('Tiempo Alerta (Santiago)', fontsize=14)
+    plt.savefig(filename2, bbox_inches='tight', dpi=200)
