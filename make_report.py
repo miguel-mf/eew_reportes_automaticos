@@ -15,6 +15,11 @@ Fecha_Termino = 'DD-MM-YYYY' # Formato: DD-MM-YYYY
 
 
 ### GENERAR FIGURAS (TEMPORALES)
+lonmin = -74
+lonmax = -66
+latmin = -26
+latmax = -16.5
+
 
 
 pdf = PDF()
